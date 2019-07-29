@@ -100,7 +100,8 @@ export default class App extends React.Component {
         var newerData;
         newerData = getUsers.map(function (product) {
             for (var key in product) {
-                if (!(key == item.name && product.id == item.id)) continue;
+                console.log(key,item.name)
+                if (!(key === item.name && product.id === Number(item.id))) continue;
                 product[key] = item.value;
             }
             return product;
@@ -132,11 +133,11 @@ export default class App extends React.Component {
     }
 
     render() {
-        const { userData, totalPages, page } = this.state;
+        const { userData, totalPages, page,sortOrder } = this.state;
         return (
             <div className={"container"} style={{ marginTop: '30px '}}>
                 <div style={{ marginBottom: '30px '}}><input onKeyUp={this.handleSearch} className="p-1" placeholder="Search..."  /></div>
-                {userData && userData.length && totalPages ? <UserTable onProductTableUpdate={this.handleProductTable.bind(this)} onSort={() => this.onSort} onRowDel={this.handleRowDel.bind(this)} userData={this.state.userData} filterText={this.state.filterText}/> : 'NO RESULTS FOUND'}
+                {userData && userData.length && totalPages ? <UserTable onProductTableUpdate={this.handleProductTable.bind(this)} onSort={() => this.onSort} sort={sortOrder} onRowDel={this.handleRowDel.bind(this)} userData={this.state.userData} filterText={this.state.filterText}/> : 'NO RESULTS FOUND'}
                 {userData && userData.length && totalPages ? <Pagination onPageChange={this.handlePageChange} page={page} totalPages={totalPages} /> : ''}
             </div>
         );
