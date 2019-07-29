@@ -45,16 +45,13 @@ export default class App extends React.Component {
         } else if(e.target.innerHTML === 'Next' && page >= totalPages) {
             currentPage = totalPages;
         }
-
         if(e.target.innerHTML === 'Previous' && page > 1) {
             currentPage = page - 1;
         } else if(e.target.innerHTML === 'Previous' && page <= 1)  {
             currentPage = 1;
         }
-
         const lastIndex = limit * currentPage;
         const firstIndex = lastIndex - limit;
-
         if(userData) {
             userData = searchResult.length ? searchResult : JSON.parse(userData);
             this.setState({ userData: userData.slice(firstIndex, lastIndex), page: currentPage});
@@ -63,16 +60,13 @@ export default class App extends React.Component {
 
     handleSearch = (e) => {
         const { limit } = this.state;
-
         let userData = JSON.parse(localStorage.getItem('userData'));
-
         if(e.target.value.length) {
             const filteredData = userData.filter(item => {
                 return Object.keys(item).some(key =>
                     ['name', 'address', 'city', 'state', 'postalcode'].includes(key) ? item[key].toLowerCase().includes(e.target.value.toLowerCase()) : null
                 );
             })
-
             const totalPages = Math.ceil(filteredData.length / limit);
             this.setState({ userData: filteredData.slice(0, limit), totalPages, searchResult: filteredData, page: 1, sortOrder: 'asc' });
         } else {
@@ -104,7 +98,6 @@ export default class App extends React.Component {
         };
         const { limit } = this.state;
         let getUsers = JSON.parse(localStorage.getItem('userData'));
-
         var newuserData = getUsers.map(function(product) {
             for (var key in product) {
                 if (key == item.name && product.id == item.id) {
