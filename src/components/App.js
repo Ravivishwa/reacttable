@@ -74,7 +74,7 @@ export default class App extends React.Component {
         }
     }
 
-    handleRowDel(product) {
+    handleRowDel = (product) => {
         const { limit, page, searchResult } = this.state;
             let myData = JSON.parse(localStorage.getItem('userData'));
             myData = myData.filter(d => d.id !== product.id);
@@ -89,7 +89,7 @@ export default class App extends React.Component {
             }
     };
 
-    handleProductTable(evt) {
+    handleProductTable = (evt) => {
         var item = {
             id: evt.target.id,
             name: evt.target.name,
@@ -110,6 +110,7 @@ export default class App extends React.Component {
         const totalPages = Math.ceil(newerData.length / limit);
         this.setState({ userData: newerData.slice(0, limit), totalPages });
     }
+
     onSort= () => {
         const { limit, page, sortOrder, searchResult } = this.state;
         let myData = searchResult.length ? searchResult : JSON.parse(localStorage.getItem('userData'));
@@ -137,7 +138,7 @@ export default class App extends React.Component {
         return (
             <div className={"container"} style={{ marginTop: '30px '}}>
                 <div style={{ marginBottom: '30px '}}><input onKeyUp={this.handleSearch} className="p-1" placeholder="Search..."  /></div>
-                {userData && userData.length && totalPages ? <UserTable onProductTableUpdate={this.handleProductTable.bind(this)} onSort={() => this.onSort} sort={sortOrder} onRowDel={this.handleRowDel.bind(this)} userData={this.state.userData} filterText={this.state.filterText}/> : 'NO RESULTS FOUND'}
+                {userData && userData.length && totalPages ? <UserTable onProductTableUpdate={this.handleProductTable} onSort={() => this.onSort} sort={sortOrder} onRowDel={this.handleRowDel} userData={this.state.userData} filterText={this.state.filterText}/> : 'NO RESULTS FOUND'}
                 {userData && userData.length && totalPages ? <Pagination onPageChange={this.handlePageChange} page={page} totalPages={totalPages} /> : ''}
             </div>
         );
