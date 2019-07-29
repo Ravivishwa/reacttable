@@ -97,30 +97,49 @@ export default class App extends React.Component {
         };
         const { limit } = this.state;
         let getUsers = JSON.parse(localStorage.getItem('userData'));
-        var newuserData = getUsers.map(function(product) {
+        var newerData;
+        newerData = getUsers.map(function (product) {
             for (var key in product) {
-                if (key == item.name && product.id == item.id) {
-                    product[key] = item.value;
-
-                }
+                if (!(key == item.name && product.id == item.id)) continue;
+                product[key] = item.value;
             }
             return product;
         });
-        localStorage.setItem('userData', JSON.stringify(newuserData));
-        const totalPages = Math.ceil(newuserData.length / limit);
-        this.setState({ userData: newuserData.slice(0, limit), totalPages });
-    };
+        localStorage.setItem('userData', JSON.stringify(newerData));
+        const totalPages = Math.ceil(newerData.length / limit);
+        this.setState({ userData: newerData.slice(0, limit), totalPages });
+    }
+    onSort= () => {
+        const { limit, page, sortOrder, searchResult } = this.state;
+        let myData = searchResult.length ? searchResult : JSON.parse(localStorage.getItem('userData'));
+        let order = sortOrder;
+        if(sortOrder === 'asc') {
+            myData = myData.sort((a, b) => b.name > a.name ? 1 : -1);
+            order = 'desc';
+        } else {
+            myData = myData.sort((a, b) => b.name > a.name ? -1 : 1);
+            order = 'asc';
+        }
+        if(!searchResult.length) {
+            localStorage.setItem('myData', JSON.stringify(myData));
+        }
+
+        const lastIndex = limit * page;
+        const firstIndex = lastIndex - limit;
+
+        this.setState({ userData: myData.slice(firstIndex, lastIndex), sortOrder: order });
+
+    }
 
     render() {
-        const { userData, totalPages, page, sortOrder } = this.state;
+        const { userData, totalPages, page } = this.state;
         return (
             <div className={"container"} style={{ marginTop: '30px '}}>
                 <div style={{ marginBottom: '30px '}}><input onKeyUp={this.handleSearch} className="p-1" placeholder="Search..."  /></div>
-                {userData && userData.length && totalPages ? <UserTable onProductTableUpdate={this.handleProductTable.bind(this)} onRowDel={this.handleRowDel.bind(this)} userData={this.state.userData} filterText={this.state.filterText}/> : 'NO RESULTS FOUND'}
+                {userData && userData.length && totalPages ? <UserTable onProductTableUpdate={this.handleProductTable.bind(this)} onSort={() => this.onSort} onRowDel={this.handleRowDel.bind(this)} userData={this.state.userData} filterText={this.state.filterText}/> : 'NO RESULTS FOUND'}
                 {userData && userData.length && totalPages ? <Pagination onPageChange={this.handlePageChange} page={page} totalPages={totalPages} /> : ''}
             </div>
         );
 
     }
-
 }
