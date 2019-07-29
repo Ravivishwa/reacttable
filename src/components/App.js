@@ -82,11 +82,18 @@ export default class App extends React.Component {
     }
 
     handleRowDel(product) {
-        var index = this.state.userData.indexOf(product);
-        this.state.userData.splice(index, 1);
-        let updatedRow = this.state.userData;
-        localStorage.setItem('userData', JSON.stringify(updatedRow))
-        this.setState(JSON.parse(localStorage.getItem('userData')));
+        const { limit, page, searchResult } = this.state;
+            let myData = JSON.parse(localStorage.getItem('userData'));
+            myData = myData.filter(d => d.id !== product.id);
+            localStorage.setItem('userData', JSON.stringify(myData));
+            const lastIndex = limit * page;
+            const firstIndex = lastIndex - limit;
+            if(searchResult.length) {
+                const searchData = searchResult.filter(d => d.id !== product);
+                this.setState({ userData: searchData.slice(firstIndex, lastIndex), searchResult: searchData});
+            } else {
+                this.setState({ userData: myData.slice(firstIndex, lastIndex)});
+            }
     };
 
     handleProductTable(evt) {
@@ -117,7 +124,7 @@ export default class App extends React.Component {
         return (
             <div className={"container"} style={{ marginTop: '30px '}}>
                 <div style={{ marginBottom: '30px '}}><input onKeyUp={this.handleSearch} className="p-1" placeholder="Search..."  /></div>
-                <UserTable onProductTableUpdate={this.handleProductTable.bind(this)} onRowDel={this.handleRowDel.bind(this)} userData={this.state.userData} filterText={this.state.filterText}/>
+                {userData && userData.length && totalPages ? <UserTable onProductTableUpdate={this.handleProductTable.bind(this)} onRowDel={this.handleRowDel.bind(this)} userData={this.state.userData} filterText={this.state.filterText}/> : 'NO RESULTS FOUND'}
                 {userData && userData.length && totalPages ? <Pagination onPageChange={this.handlePageChange} page={page} totalPages={totalPages} /> : ''}
             </div>
         );
