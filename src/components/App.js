@@ -2,7 +2,6 @@ import React from 'react'
 import UserTable from './UserTable'
 import Pagination from "./Pagination";
 
-
 export default class App extends React.Component {
     constructor(props) {
         super(props);
