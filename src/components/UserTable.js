@@ -2,31 +2,28 @@ import React from 'react'
 import ProductRow from './ProductRow'
 
 class UserTable extends React.Component {
-
     render() {
+
         var onProductTableUpdate = this.props.onProductTableUpdate;
         var rowDel = this.props.onRowDel;
-        var filterText = this.props.filterText;
-        var product = this.props.products.map(function(product) {
-            if (product.name.toLowerCase().indexOf(filterText) === -1) {
-                return;
-            }
-            return (<ProductRow onProductTableUpdate={onProductTableUpdate} product={product} onDelEvent={rowDel.bind(this)} key={product.id}/>)
+        var renderList = this.props.userData.map(function(data) {
+            return (<ProductRow onProductTableUpdate={onProductTableUpdate} product={data} onDelEvent={rowDel.bind(this)} key={data.id}/>)
         });
         return (
             <div>
                 <table className="table table-bordered">
                     <thead>
                     <tr>
-                        <th>Name</th>
-                        <th>Adress</th>
-                        <th>City</th>
-                        <th>State</th>
-                        <th>Postal Code</th>
+                        <th name="name">Name</th>
+                        <th name="address">Adress</th>
+                        <th name="city">City</th>
+                        <th name="state">State</th>
+                        <th name="postalcode">Postal Code</th>
+                        <th name="delete"></th>
                     </tr>
                     </thead>
                     <tbody>
-                    {product}
+                    {renderList}
                     </tbody>
 
                 </table>
